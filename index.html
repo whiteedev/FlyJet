@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlyJet</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <p class="header-title">FlyJet Creator: defdev</p> 
+        <div id="balanceDisplay" class="balance-display">Баланс: 100.00</div>
+    </header>
+    <div class="game-container">
+        <div id="multiplierDisplay" class="multiplier-display">1.00x</div>
+        <div class="airplane-container">
+            <div class="airplane" id="airplane">✈️</div>
+            <div class="line" id="line"></div>
+        </div>
+        <div class="controls">
+            <input type="number" min="1" max="250000" class="inp1" id="betInput" placeholder="Введите ставку" />
+            <br>
+            <button id="betButton" class="btn-primary">Сделать ставку</button>
+            <div class="auto-cashout">
+    <label class="auto-cashout-switch">
+        <input type="checkbox" id="autoCashOutCheckbox">
+        <span class="auto-cashout-slider"></span>
+    </label>
+    <label for="autoCashOutCheckbox">Авто-вывод</label>
+    <input min="1,01" max="9999,00" type="number" class="inp2" id="autoCashOutInput" value="2.00" step="0.01" min="1.00" class="auto-cashout-input">x
+</div>
+
+        </div>
+        <div id="message" class="message"></div>
+        <div class="height-indicators" id="heightIndicators"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
