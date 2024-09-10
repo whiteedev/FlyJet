@@ -15,6 +15,11 @@ const balanceDisplay = document.getElementById('balanceDisplay');
 const heightIndicators = document.getElementById('heightIndicators');
 const line = document.getElementById('line');
 
+// Функция для генерации случайного числа в диапазоне min и max
+function getRandom(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 function updateBalanceDisplay() {
     balanceDisplay.textContent = `Баланс: ${balance.toFixed(2)}`;
 }
@@ -40,13 +45,17 @@ function startGame() {
     betButton.classList.add('btn-secondary'); // Добавляем класс для оранжевого цвета
     betButton.disabled = false; // Включаем кнопку "Забрать" после ставки
 
-    // Генерируем рандомное время от 3 до 5 секунд для завершения полета
-    flightDuration = Math.random() * (5000 - 3000) + 3000; // Время от 3 до 5 секунд (3000 до 5000 мс)
+    // Генерируем случайную длительность полета
+    flightDuration = getRandom(3000, 5000); // Время от 3 до 5 секунд (3000 до 5000 мс)
 
     // Определяем размеры контейнера для самолета
     const container = document.querySelector('.airplane-container');
     const containerWidth = container.offsetWidth;
     const containerHeight = container.offsetHeight;
+
+    // Настроим случайное значение интервала обновления и скорости перемещения
+    const updateInterval = getRandom(40, 90); // Интервал обновления от 65 до 105 миллисекунд
+    const speed = getRandom(1, 3); // Скорость перемещения от 1 до 3 пикселей
 
     // Начальные значения для позиции и высоты самолета
     let airplanePosition = 0;
@@ -56,12 +65,13 @@ function startGame() {
 
     // Запускаем интервал для обновления положения самолета и линии
     interval = setInterval(() => {
-        multiplier += 0.01; // Увеличиваем множитель на 0.01
+        multiplier += Math.random() * 0.05; // Изменяем множитель
+
         multiplierDisplay.textContent = `${multiplier.toFixed(2)}x`; // Формат с двумя знаками после запятой
 
         // Увеличиваем позицию и высоту самолета
-        airplanePosition += 2;
-        airplaneHeight += (containerHeight / containerWidth) * 2; // Поддерживаем диагональное движение
+        airplanePosition += speed; // Используем случайную скорость
+        airplaneHeight += (containerHeight / containerWidth) * speed; // Поддерживаем диагональное движение
 
         // Ограничиваем движение самолета в пределах контейнера
         if (airplanePosition > containerWidth) {
@@ -90,8 +100,7 @@ function startGame() {
             clearInterval(interval); // Останавливаем движение
             message.textContent = 'Самолет достиг максимальной высоты!';
         }
-
-    }, 100); // Обновление каждые 100 миллисекунд
+    }, updateInterval); // Используем случайный интервал обновления
 
     setTimeout(() => {
         endGame();
