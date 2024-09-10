@@ -1,4 +1,4 @@
-let balance = 100.00; // Начальный баланс
+let balance = 500.00; // Начальный баланс
 let multiplier = 1.00; // Начальное значение множителя
 let interval;
 let isFlying = false;
