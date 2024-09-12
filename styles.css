@@ -1,4 +1,3 @@
-
 body {
     display: flex;
     flex-direction: column;
@@ -230,7 +229,7 @@ input:checked + .auto-cashout-slider:before {
 }
 
 .inp1 {
-  width: 158px;
+  width: 152px;
  }
  
  .inp2 {
