@@ -197,8 +197,10 @@ input:checked + .auto-cashout-slider:before {
 
 .message {
     font-size: 1.1em;
-    color: #ff5722;
+    color: #51f542;
     margin: 10px 0;
+    font-family: arial;
+    font-weight: bold;
 }
 
 .height-indicators {
