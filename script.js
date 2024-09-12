@@ -24,115 +24,107 @@ function updateBalanceDisplay() {
     balanceDisplay.textContent = `Баланс: ${balance.toFixed(2)}`;
 }
 
+function updateBetButtonText() {
+    if (isFlying) {
+        const potentialWinnings = betAmount * multiplier;
+        betButton.textContent = `Забрать ${potentialWinnings.toFixed(2)}`;
+    } else {
+        betButton.textContent = 'Сделать ставку';
+    }
+}
+
 function startGame() {
     betAmount = parseFloat(betInput.value);
 
-    // Проверка на корректность ставки
     if (isNaN(betAmount) || betAmount <= 0 || betAmount > balance) {
         alert("Введите корректную ставку!");
         return;
     }
 
-    // Уменьшаем баланс на сумму ставки и обновляем отображение
     balance -= betAmount;
     updateBalanceDisplay();
 
     isFlying = true;
-    multiplier = 1.00; // Обнуляем множитель
+    multiplier = 1.00;
     message.textContent = '';
-    betButton.textContent = 'Забрать'; // Изменяем текст кнопки
-    betButton.classList.remove('btn-primary'); // Убираем основной класс
-    betButton.classList.add('btn-secondary'); // Добавляем класс для оранжевого цвета
-    betButton.disabled = false; // Включаем кнопку "Забрать" после ставки
+    updateBetButtonText();
+    betButton.classList.remove('btn-primary');
+    betButton.classList.add('btn-secondary');
+    betButton.disabled = false;
 
-    // Генерируем случайную длительность полета
-    flightDuration = getRandom(3000, 5000); // Время от 3 до 5 секунд (3000 до 5000 мс)
+    flightDuration = getRandom(2000, 5000);
 
-    // Определяем размеры контейнера для самолета
     const container = document.querySelector('.airplane-container');
     const containerWidth = container.offsetWidth;
     const containerHeight = container.offsetHeight;
+    const updateInterval = getRandom(40, 90);
+    const speed = getRandom(1, 3);
 
-    // Настроим случайное значение интервала обновления и скорости перемещения
-    const updateInterval = getRandom(40, 90); // Интервал обновления от 65 до 105 миллисекунд
-    const speed = getRandom(1, 3); // Скорость перемещения от 1 до 3 пикселей
-
-    // Начальные значения для позиции и высоты самолета
     let airplanePosition = 0;
     let airplaneHeight = 0;
-    line.style.visibility = 'visible'; // Показываем линию
-    line.style.width = '0'; // Сбрасываем ширину линии
+    line.style.visibility = 'visible';
+    line.style.width = '0';
 
-    // Запускаем интервал для обновления положения самолета и линии
+    heightIndicators.innerHTML = ''; // Очищаем индикаторы высоты при запуске новой игры
+
     interval = setInterval(() => {
-        multiplier += Math.random() * 0.05; // Изменяем множитель
+        multiplier += Math.random() * 0.05;
+        multiplierDisplay.textContent = `${multiplier.toFixed(2)}x`;
+        updateBetButtonText();
 
-        multiplierDisplay.textContent = `${multiplier.toFixed(2)}x`; // Формат с двумя знаками после запятой
+        airplanePosition += speed;
+        airplaneHeight += (containerHeight / containerWidth) * speed;
 
-        // Увеличиваем позицию и высоту самолета
-        airplanePosition += speed; // Используем случайную скорость
-        airplaneHeight += (containerHeight / containerWidth) * speed; // Поддерживаем диагональное движение
+        if (airplanePosition > containerWidth) airplanePosition = containerWidth;
+        if (airplaneHeight > containerHeight) airplaneHeight = containerHeight;
 
-        // Ограничиваем движение самолета в пределах контейнера
-        if (airplanePosition > containerWidth) {
-            airplanePosition = containerWidth;
-        }
-        if (airplaneHeight > containerHeight) {
-            airplaneHeight = containerHeight;
-        }
-
-        // Перемещаем самолет по диагонали
         airplane.style.transform = `translate(${airplanePosition}px, -${airplaneHeight}px)`;
-
-        // Перемещаем линию так, чтобы она следовала за самолетом
         line.style.width = `${airplanePosition}px`;
         line.style.transform = `translateY(-${airplaneHeight}px)`;
 
-        // Добавляем кружок для отображения высоты
         if (airplaneHeight % 20 === 0) {
             const circle = document.createElement('div');
             circle.className = 'circle';
             heightIndicators.appendChild(circle);
         }
 
-        // Проверяем, достиг ли самолет своей максимальной высоты
         if (airplanePosition >= containerWidth || airplaneHeight >= containerHeight) {
-            clearInterval(interval); // Останавливаем движение
+            clearInterval(interval);
             message.textContent = 'Самолет достиг максимальной высоты!';
         }
-    }, updateInterval); // Используем случайный интервал обновления
+    }, updateInterval);
 
     setTimeout(() => {
-        endGame();
-    }, flightDuration); // Завершение полета через рандомное время
+        if (isFlying) endGame();
+    }, flightDuration);
 }
 
 function endGame() {
     clearInterval(interval);
     isFlying = false;
-    betButton.textContent = 'Сделать ставку'; // Возвращаем текст кнопки
-    betButton.classList.remove('btn-secondary'); // Убираем класс для оранжевого цвета
-    betButton.classList.add('btn-primary'); // Добавляем основной класс
-    betButton.disabled = false; // Включаем кнопку ставки после игры
+    betButton.classList.remove('btn-secondary');
+    betButton.classList.add('btn-primary'); // Возвращаем цвет кнопки
+    updateBetButtonText(); // Обновляем текст кнопки при окончании игры
+    betButton.disabled = false;
     multiplierDisplay.textContent = '1.00x';
-    airplane.style.transform = 'translate(0, 0)'; // Возвращаем самолет в начальное положение
-    line.style.visibility = 'hidden'; // Скрываем линию
+    airplane.style.transform = 'translate(0, 0)';
+    line.style.visibility = 'hidden';
+    heightIndicators.innerHTML = ''; // Очищаем индикаторы высоты
 }
 
 function cashOut() {
     if (isFlying) {
         clearInterval(interval);
         isFlying = false;
-        betButton.textContent = 'Сделать ставку'; // Возвращаем текст кнопки
-        betButton.classList.remove('btn-secondary'); // Убираем класс для оранжевого цвета
-        betButton.classList.add('btn-primary'); // Добавляем основной класс
-        betButton.disabled = false;
         const winnings = betAmount * multiplier;
-        balance += winnings; // Добавляем выигрыш к балансу
+        balance += winnings;
         message.textContent = `Вы забрали ${winnings.toFixed(2)}!`;
         multiplierDisplay.textContent = '1.00x';
-        airplane.style.transform = 'translate(0, 0)'; // Возвращаем самолет в начальное положение
-        updateBalanceDisplay(); // Обновляем отображение баланса
+        airplane.style.transform = 'translate(0, 0)';
+        updateBalanceDisplay();
+        updateBetButtonText(); // Обновляем текст кнопки после забирания выигрыша
+        betButton.classList.remove('btn-secondary');
+        betButton.classList.add('btn-primary'); // Возвращаем цвет кнопки
 
         setTimeout(() => {
             message.textContent = '';
@@ -140,16 +132,13 @@ function cashOut() {
     }
 }
 
-function autoCashOut() {
+let autoCashOutInterval;
+
+function checkAutoCashOut() {
     if (autoCashOutCheckbox.checked) {
         const targetMultiplier = parseFloat(autoCashOutInput.value);
-        if (!isNaN(targetMultiplier) && targetMultiplier > 1) {
-            const checkAutoCashOut = setInterval(() => {
-                if (isFlying && multiplier >= targetMultiplier) {
-                    cashOut();
-                    clearInterval(checkAutoCashOut);
-                }
-            }, 100);
+        if (!isNaN(targetMultiplier) && targetMultiplier > 1 && isFlying && multiplier >= targetMultiplier) {
+            cashOut();
         }
     }
 }
@@ -162,7 +151,14 @@ betButton.addEventListener('click', () => {
         startGame();
     }
 });
-autoCashOutCheckbox.addEventListener('change', autoCashOut);
+
+autoCashOutCheckbox.addEventListener('change', () => {
+    if (autoCashOutCheckbox.checked) {
+        autoCashOutInterval = setInterval(checkAutoCashOut, 1000);
+    } else {
+        clearInterval(autoCashOutInterval);
+    }
+});
 
 // Инициализируем отображение баланса
 updateBalanceDisplay();
