@@ -27,9 +27,9 @@ function updateBalanceDisplay() {
 function updateBetButtonText() {
     if (isFlying) {
         const potentialWinnings = betAmount * multiplier;
-        betButton.textContent = `Забрать ${potentialWinnings.toFixed(2)}`;
+        betButton.textContent = `ЗАБРАТЬ ${potentialWinnings.toFixed(2)}`;
     } else {
-        betButton.textContent = 'Сделать ставку';
+        betButton.textContent = 'СТАВКА';
     }
 }
 
