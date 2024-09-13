@@ -8,29 +8,31 @@ body {
     color: #e6e6e6;
     font-family: 'Roboto', sans-serif;
     margin: 0;
+    touch-action: none;
 }
 
 /* Стили для контейнера игры */
 .game-container {
     text-align: center;
-    margin-top: 70px; /* Отступ сверху для фиксированной шапки */
-    width: 100%;
+    margin-top: 0; /* Отступ сверху для фиксированной шапки */
+    width: 90%;
 }
 
 /* Стили для отображения множителя */
 .multiplier-display {
     font-size: 1.2em;
     color: #fff;
+    font-family: arial;
     margin: 20px 0; /* Отступы сверху и снизу */
 }
 
 /* Стили для контейнера с самолетом */
 .airplane-container {
     position: relative;
-    height: 300px;
+    height: 200px;
     overflow: hidden;
-    border: 2px solid #9b5dff; /* Темно-фиолетовый цвет для границы */
-    border-radius: 10px;
+    border: 2px solid #181818; /* Темно-фиолетовый цвет для границы */
+    border-radius: 20px;
     background: rgba(0, 0, 0, 0.3); /* Легкая тень для контейнера */
 }
 
@@ -38,7 +40,7 @@ body {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background: linear-gradient(to right, #4a0d76, #8e2f8f); /* Градиентный фон от темно-фиолетового к светло-фиолетовому */
+    background: #222;
     color: #fff;
     width: 100%;
     padding: 10px 20px; /* Уменьшенное внутреннее пространство для компактного вида */
@@ -46,7 +48,7 @@ body {
     top: 0;
     left: 0;
     z-index: 1000;
-    border-bottom: 3px solid #6e2c91; /* Более толстая граница */
+    border-bottom: 3px solid #713aee; /* Более толстая граница */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Тень для более глубокого эффекта */
 }
 
@@ -71,8 +73,6 @@ body {
     color: #fff;
     font-size: 2.5em;
     margin-bottom: 20px;
-    width: 50px;
-    height: 50px;
 }
 
 .airplane {
@@ -87,7 +87,7 @@ body {
     bottom: 0;
     left: 0;
     height: 2px;
-    background-color: #6e2c91; /* Темно-фиолетовая линия */
+    background-color: #713aee; /* Темно-фиолетовая линия */
     width: 0;
     visibility: hidden;
     transition: width 0.1s linear;
@@ -104,8 +104,7 @@ input, button {
 
 /* Стили для инпутов */
 input[type="number"] {
-    border-radius: 5px;
-    border: 1px solid #6e2c91; /* Темно-фиолетовая граница для инпутов */
+    border: 1px solid #713aee; /* Темно-фиолетовая граница для инпутов */
     background: #fff;
     color: #333;
 }
@@ -116,77 +115,16 @@ button {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    background-color: #6e2c91; /* Темно-фиолетовый цвет кнопок */
+    background: radial-gradient(circle, rgba(115,58,241,1) 0%, rgba(100,42,250,1) 40%, rgba(127,63,245,1) 100%);
     color: #fff;
     box-shadow: 0 4px 8px rgba(106, 27, 133, 0.6); /* Фиолетовая тень */
 }
 
 button:hover {
-    background-color: #5d1b8f; /* Более темный оттенок фиолетового при наведении */
+    background-color: #642afa; /* Более темный оттенок фиолетового при наведении */
     box-shadow: 0 6px 12px rgba(106, 27, 133, 0.8); /* Более яркая фиолетовая тень при наведении */
 }
 
-.auto-cashout {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.auto-cashout label {
-    margin-left: 5px;
-    font-size: 1em;
-    color: #e6e6e6;
-}
-
-/* Стили для свитча */
-.auto-cashout-input {
-    width: 80px;
-    margin-left: 5px;
-    border-radius: 5px;
-    border: 1px solid #6e2c91; /* Темно-фиолетовая граница для инпутов */
-    background: #fff;
-    color: #333;
-}
-
-/* Стили для свитча */
-.auto-cashout-switch {
-    position: relative;
-    display: inline-block;
-    width: 34px;
-    height: 20px;
-    margin-left: 5px;
-}
-
-.auto-cashout-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.auto-cashout-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 20px;
-}
-
-.auto-cashout-slider:before {
-    position: absolute;
-    content: "";
-    height: 12px;
-    width: 12px;
-    border-radius: 50%;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-}
 
 input:checked + .auto-cashout-slider {
     background-color: #6e2c91; /* Темно-фиолетовый цвет для активного свитча */
@@ -214,7 +152,7 @@ input:checked + .auto-cashout-slider:before {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background-color: #6e2c91; /* Темно-фиолетовый цвет для индикаторов высоты */
+    background-color: #713aee; /* Темно-фиолетовый цвет для индикаторов высоты */
     margin: 0 2px;
 }
 
@@ -230,8 +168,28 @@ input:checked + .auto-cashout-slider:before {
     box-shadow: 0 6px 12px rgba(255, 87, 34, 0.8); /* Более яркая оранжевая тень при наведении */
 }
 
+.btn-primary {
+    font-family: arial;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 18px 45px;
+    border-radius: 12px;
+    float: right;
+  }
+  
+ .cont-stav {
+   margin: 15px auto;
+   border-radius: 15px;
+   background-color: #231c47;
+   padding: 25px;
+ }
+
 .inp1 {
-  width: 152px;
+  width: 150px;
+  height: 50px;
+  border-radius: 10px;
+  float: left;
+  margin: 10px 10px;
  }
  
  .inp2 {
