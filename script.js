@@ -52,12 +52,12 @@ function startGame() {
     betButton.classList.add('btn-secondary');
     betButton.disabled = false;
 
-    flightDuration = getRandom(2000, 5000);
+    flightDuration = getRandom(2000, 4000);
 
     const container = document.querySelector('.airplane-container');
     const containerWidth = container.offsetWidth;
     const containerHeight = container.offsetHeight;
-    const updateInterval = getRandom(40, 90);
+    const updateInterval = getRandom(77, 99);
     const speed = getRandom(1, 3);
 
     let airplanePosition = 0;
@@ -86,6 +86,14 @@ function startGame() {
             const circle = document.createElement('div');
             circle.className = 'circle';
             heightIndicators.appendChild(circle);
+        }
+
+        // Проверяем, достиг ли множитель значения авто-вывода
+        if (autoCashOutCheckbox.checked) {
+            const targetMultiplier = parseFloat(autoCashOutInput.value);
+            if (!isNaN(targetMultiplier) && targetMultiplier > 1 && multiplier >= targetMultiplier) {
+                cashOut();
+            }
         }
 
         if (airplanePosition >= containerWidth || airplaneHeight >= containerHeight) {
@@ -132,17 +140,6 @@ function cashOut() {
     }
 }
 
-let autoCashOutInterval;
-
-function checkAutoCashOut() {
-    if (autoCashOutCheckbox.checked) {
-        const targetMultiplier = parseFloat(autoCashOutInput.value);
-        if (!isNaN(targetMultiplier) && targetMultiplier > 1 && isFlying && multiplier >= targetMultiplier) {
-            cashOut();
-        }
-    }
-}
-
 // Привязываем события к кнопкам и чекбоксу
 betButton.addEventListener('click', () => {
     if (isFlying) {
@@ -153,8 +150,16 @@ betButton.addEventListener('click', () => {
 });
 
 autoCashOutCheckbox.addEventListener('change', () => {
+    // При изменении чекбокса автоматического вывода, проверка будет выполняться в интервале
     if (autoCashOutCheckbox.checked) {
-        autoCashOutInterval = setInterval(checkAutoCashOut, 1000);
+        autoCashOutInterval = setInterval(() => {
+            const targetMultiplier = parseFloat(autoCashOutInput.value);
+            if (!isNaN(targetMultiplier) && targetMultiplier > 1 && isFlying) {
+                if (multiplier >= targetMultiplier) {
+                    cashOut();
+                }
+            }
+        }, 100); // Проверяем авто-вывод чаще для точности
     } else {
         clearInterval(autoCashOutInterval);
     }
