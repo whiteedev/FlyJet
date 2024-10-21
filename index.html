@@ -1,187 +1,96 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Расписание 8 "З"</title>
-    <style>
-        body {
-            background-color: #2c2c2c;
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            font-size: 24px; /* Уменьшенный размер заголовка */
-            margin-top: 20px;
-        }
-        table {
-            width: 80%; /* Уменьшил ширину таблицы */
-            margin: 20px auto;
-            border-collapse: collapse;
-            color: white;
-        }
-        table, th, td {
-            border: 1px solid #444;
-        }
-        th, td {
-            padding: 8px; /* Уменьшил отступы внутри ячеек */
-            text-align: center;
-            font-size: 14px; /* Уменьшенный размер текста */
-        }
-        th {
-            background-color: #333;
-        }
-        td {
-            background-color: #3c3c3c;
-        }
-        .homework-input {
-            margin-top: 10px;
-            padding: 8px; /* Сделал поле для ввода меньше */
-            width: 250px; /* Уменьшил ширину поля ввода */
-            background-color: #444;
-            color: white;
-            border: 1px solid #555;
-            border-radius: 5px;
-        }
-        .add-button {
-            padding: 8px 15px; /* Уменьшил размер кнопки */
-            background-color: #1c1c1c;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .add-button:hover {
-            background-color: #444;
-        }
-        .container {
-            max-width: 1000px; /* Ограничение максимальной ширины контейнера */
-            margin: 0 auto;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Фотоловушка</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    video {
+      width: 300px;
+      height: 225px;
+      border: 2px solid #000;
+    }
+
+    canvas {
+      display: none;
+      margin-top: 10px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    p {
+      font-size: 24px;
+      color: red;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
+  <h1>Разрешите доступ к камере</h1>
+  <video id="video" autoplay></video>
+  <button id="capture">Сделать фото</button>
+  <canvas id="canvas"></canvas>
+  <p id="message" style="display: none;">Тебя разыграли!</p>
 
-    <div class="container">
-        <h1>Расписание уроков 8 "З"</h1>
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+    const message = document.getElementById('message');
+    const context = canvas.getContext('2d');
 
-        <table id="schedule">
-            <tr>
-                <th>День недели</th>
-                <th>Урок 1</th>
-                <th>Урок 2</th>
-                <th>Урок 3</th>
-                <th>Урок 4</th>
-                <th>Урок 5</th>
-                <th>Урок 6</th>
-                <th>Урок 7</th>
-                <th>Урок 8</th>
-            </tr>
-            <tr>
-                <td>Понедельник</td>
-                <td>Математика <span id="hw-mon-1"></span></td>
-                <td>Русский язык <span id="hw-mon-2"></span></td>
-                <td>Физика <span id="hw-mon-3"></span></td>
-                <td>История <span id="hw-mon-4"></span></td>
-                <td>География <span id="hw-mon-5"></span></td>
-                <td>Физкультура <span id="hw-mon-6"></span></td>
-                <td>Музыка <span id="hw-mon-7"></span></td>
-                <td>Информатика <span id="hw-mon-8"></span></td>
-            </tr>
-            <tr>
-                <td>Вторник</td>
-                <td>Английский язык <span id="hw-tue-1"></span></td>
-                <td>Химия <span id="hw-tue-2"></span></td>
-                <td>Литература <span id="hw-tue-3"></span></td>
-                <td>Математика <span id="hw-tue-4"></span></td>
-                <td>Технология <span id="hw-tue-5"></span></td>
-                <td>Музыка <span id="hw-tue-6"></span></td>
-                <td>Физика <span id="hw-tue-7"></span></td>
-                <td>География <span id="hw-tue-8"></span></td>
-            </tr>
-            <tr>
-                <td>Среда</td>
-                <td>Биология <span id="hw-wed-1"></span></td>
-                <td>История <span id="hw-wed-2"></span></td>
-                <td>Русский язык <span id="hw-wed-3"></span></td>
-                <td>География <span id="hw-wed-4"></span></td>
-                <td>Физика <span id="hw-wed-5"></span></td>
-                <td>Математика <span id="hw-wed-6"></span></td>
-                <td>Химия <span id="hw-wed-7"></span></td>
-                <td>Информатика <span id="hw-wed-8"></span></td>
-            </tr>
-            <tr>
-                <td>Четверг</td>
-                <td>Физкультура <span id="hw-thu-1"></span></td>
-                <td>Информатика <span id="hw-thu-2"></span></td>
-                <td>Русский язык <span id="hw-thu-3"></span></td>
-                <td>Литература <span id="hw-thu-4"></span></td>
-                <td>Английский язык <span id="hw-thu-5"></span></td>
-                <td>Химия <span id="hw-thu-6"></span></td>
-                <td>Математика <span id="hw-thu-7"></span></td>
-                <td>География <span id="hw-thu-8"></span></td>
-            </tr>
-            <tr>
-                <td>Пятница</td>
-                <td>Математика <span id="hw-fri-1"></span></td>
-                <td>История <span id="hw-fri-2"></span></td>
-                <td>География <span id="hw-fri-3"></span></td>
-                <td>Биология <span id="hw-fri-4"></span></td>
-                <td>Информатика <span id="hw-fri-5"></span></td>
-                <td>Физкультура <span id="hw-fri-6"></span></td>
-                <td>Химия <span id="hw-fri-7"></span></td>
-                <td>Английский язык <span id="hw-fri-8"></span></td>
-            </tr>
-        </table>
+    // Запрос доступа к камере
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((err) => {
+        console.error('Ошибка доступа к камере: ', err);
+      });
 
-        <h2>Добавить домашнее задание</h2>
-        <form id="homeworkForm">
-            <select id="daySelect" class="homework-input">
-                <option value="mon">Понедельник</option>
-                <option value="tue">Вторник</option>
-                <option value="wed">Среда</option>
-                <option value="thu">Четверг</option>
-                <option value="fri">Пятница</option>
-            </select>
-            <select id="lessonSelect" class="homework-input">
-                <option value="1">Урок 1</option>
-                <option value="2">Урок 2</option>
-                <option value="3">Урок 3</option>
-                <option value="4">Урок 4</option>
-                <option value="5">Урок 5</option>
-                <option value="6">Урок 6</option>
-                <option value="7">Урок 7</option>
-                <option value="8">Урок 8</option>
-            </select>
-            <input type="text" id="homeworkInput" class="homework-input" placeholder="Введите домашнее задание">
-            <button type="button" class="add-button" onclick="addHomework()">Добавить</button>
-        </form>
-    </div>
-
-    <script>
-        function addHomework() {
-            const day = document.getElementById('daySelect').value; // Получаем
-            const lesson = document.getElementById('lessonSelect').value; // Получаем выбранный урок
-            const homework = document.getElementById('homeworkInput').value; // Получаем введённое домашнее задание
-
-            // Проверяем, что поле домашнего задания не пустое
-            if (homework.trim() === "") {
-                alert("Пожалуйста, введите домашнее задание.");
-                return;
-            }
-
-            // Находим элемент для отображения домашнего задания в таблице
-            const hwElement = document.getElementById(`hw-${day}-${lesson}`);
-
-            // Добавляем текст домашнего задания в соответствующую ячейку
-            hwElement.innerHTML = `<br><strong>ДЗ:</strong> ${homework}`;
-
-            // Очищаем поле для ввода домашнего задания после добавления
-            document.getElementById('homeworkInput').value = "";
-        }
-    </script>
+    // Событие нажатия на кнопку "Сделать фото"
+    captureButton.addEventListener('click', () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      
+      // Рисуем кадр с видео на canvas
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      // Скрываем видео, показываем фото и сообщение
+      video.style.display = 'none';
+      canvas.style.display = 'block';
+      message.style.display = 'block';
+      
+      // Отключаем поток с камеры
+      video.srcObject.getTracks().forEach(track => track.stop());
+    });
+  </script>
 </body>
 </html>
