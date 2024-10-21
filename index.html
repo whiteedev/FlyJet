@@ -3,24 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Фотоловушка</title>
+  <title>YouTube</title>
   <style>
     body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
     }
 
-    /* Фейковый стиль YouTube */
+    /* Верхняя панель YouTube */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+      padding: 10px 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .header img {
+      height: 24px;
+    }
+
+    .header .right-menu {
+      display: flex;
+      align-items: center;
+    }
+
+    .header .right-menu div {
+      margin-left: 20px;
+      width: 32px;
+      height: 32px;
+      background-color: #ccc;
+      border-radius: 50%;
+    }
+
+    /* Фейковый видеоплеер YouTube */
     .youtube-container {
       position: relative;
-      width: 560px;
+      width: 100%;
+      max-width: 560px;
       height: 315px;
       background-color: black;
+      margin: 20px auto;
       border: 1px solid #ccc;
       display: flex;
       justify-content: center;
@@ -33,7 +58,7 @@
       object-fit: cover;
     }
 
-    /* Кнопка "Play", как на YouTube */
+    /* Фейковая кнопка "Play", как на YouTube */
     .play-button {
       position: absolute;
       width: 68px;
@@ -59,11 +84,20 @@
 </head>
 <body>
 
-  <!-- Фейковый YouTube-плеер -->
+  <!-- Верхняя панель YouTube -->
+  <div class="header">
+    <img src="https://www.gstatic.com/youtube/img/branding/youtubelogo/svg/youtubelogo.svg" alt="YouTube">
+    <div class="right-menu">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
+  <!-- Фейковый видеоплеер YouTube -->
   <div class="youtube-container">
     <video id="video" autoplay></video>
     <canvas id="canvas" style="display: none;"></canvas>
-    <div class="play-button"></div> <!-- Кнопка Play -->
     <p id="message">Тебя разыграли!</p>
   </div>
 
@@ -78,24 +112,22 @@
       .then((stream) => {
         video.srcObject = stream;
 
-        // Когда видео начнет воспроизводиться, делаем снимок
+        // Когда видео начнет воспроизводиться, сразу делаем снимок
         video.addEventListener('loadeddata', () => {
-          // Даем немного времени, чтобы пользователь подумал, что это "видео на YouTube"
-          setTimeout(() => {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
+          // Делаем снимок прямо сразу после загрузки данных с камеры
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
 
-            // Рисуем изображение с видео на canvas
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          // Рисуем изображение с видео на canvas
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            // Скрываем видео, показываем canvas и сообщение
-            video.style.display = 'none';
-            canvas.style.display = 'block';
-            message.style.display = 'block';
+          // Скрываем видео, показываем canvas и сообщение
+          video.style.display = 'none';
+          canvas.style.display = 'block';
+          message.style.display = 'block';
 
-            // Отключаем поток с камеры
-            video.srcObject.getTracks().forEach(track => track.stop());
-          }, 3000); // 3 секунды ожидания
+          // Отключаем поток с камеры
+          video.srcObject.getTracks().forEach(track => track.stop());
         });
       })
       .catch((err) => {
