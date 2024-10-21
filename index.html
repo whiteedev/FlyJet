@@ -7,62 +7,69 @@
   <style>
     body {
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      background-color: #f9f9f9;
     }
 
-    h1 {
-      color: #333;
+    /* Фейковый стиль YouTube */
+    .youtube-container {
+      position: relative;
+      width: 560px;
+      height: 315px;
+      background-color: black;
+      border: 1px solid #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    video {
-      width: 300px;
-      height: 225px;
-      border: 2px solid #000;
+    video, canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    canvas {
-      display: none;
-      margin-top: 10px;
+    /* Кнопка "Play", как на YouTube */
+    .play-button {
+      position: absolute;
+      width: 68px;
+      height: 48px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/YouTube_play_button_icon_%282013-2017%29.svg/1024px-YouTube_play_button_icon_%282013-2017%29.svg.png') no-repeat center;
+      background-size: contain;
+      z-index: 1;
+      pointer-events: none;
     }
 
-    button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    p {
-      font-size: 24px;
+    /* Сообщение "Тебя разыграли" */
+    #message {
+      position: absolute;
       color: red;
+      font-size: 24px;
       font-weight: bold;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
     }
   </style>
 </head>
 <body>
-  <h1>Разрешите доступ к камере</h1>
-  <video id="video" autoplay></video>
-  <button id="capture">Сделать фото</button>
-  <canvas id="canvas"></canvas>
-  <p id="message" style="display: none;">Тебя разыграли!</p>
+
+  <!-- Фейковый YouTube-плеер -->
+  <div class="youtube-container">
+    <video id="video" autoplay></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <div class="play-button"></div> <!-- Кнопка Play -->
+    <p id="message">Тебя разыграли!</p>
+  </div>
 
   <script>
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
-    const captureButton = document.getElementById('capture');
     const message = document.getElementById('message');
     const context = canvas.getContext('2d');
 
@@ -70,27 +77,31 @@
     navigator.mediaDevices.getUserMedia({ video: true })
       .then((stream) => {
         video.srcObject = stream;
+
+        // Когда видео начнет воспроизводиться, делаем снимок
+        video.addEventListener('loadeddata', () => {
+          // Даем немного времени, чтобы пользователь подумал, что это "видео на YouTube"
+          setTimeout(() => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Рисуем изображение с видео на canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Скрываем видео, показываем canvas и сообщение
+            video.style.display = 'none';
+            canvas.style.display = 'block';
+            message.style.display = 'block';
+
+            // Отключаем поток с камеры
+            video.srcObject.getTracks().forEach(track => track.stop());
+          }, 3000); // 3 секунды ожидания
+        });
       })
       .catch((err) => {
         console.error('Ошибка доступа к камере: ', err);
       });
-
-    // Событие нажатия на кнопку "Сделать фото"
-    captureButton.addEventListener('click', () => {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      
-      // Рисуем кадр с видео на canvas
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      
-      // Скрываем видео, показываем фото и сообщение
-      video.style.display = 'none';
-      canvas.style.display = 'block';
-      message.style.display = 'block';
-      
-      // Отключаем поток с камеры
-      video.srcObject.getTracks().forEach(track => track.stop());
-    });
   </script>
+
 </body>
 </html>
